@@ -1,0 +1,45 @@
+# AI智能客服框架 - 依赖清单
+
+# ============ 核心框架 ============
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.12.3
+
+# ============ AI框架 ============
+agno==2.0.8
+openai==2.5.0
+
+# ============ 知识库和向量存储 ============
+langchain==0.3.27
+langchain-openai==0.3.35
+langchain-core==0.3.79
+langchain-community==0.3.27
+langchain-text-splitters==0.3.11
+langchain-postgres==0.0.16
+
+# ============ 向量数据库 ============
+psycopg2-binary==2.9.11
+pgvector==0.3.6
+
+# ============ Embedding和重排序 ============
+# 使用CPU版本的PyTorch（减小镜像大小）
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.1+cpu
+sentence-transformers==5.1.1
+
+# ============ 缓存 ============
+redis==6.4.0
+
+# ============ 文件处理 ============
+python-docx==1.2.0
+PyPDF2==3.0.1
+openpyxl==3.1.5
+pandas==2.3.3
+
+# ============ 工具库 ============
+requests==2.31.0
+httpx[http2]==0.28.1
+python-multipart==0.0.6
+psutil==5.9.0
+PyJWT==2.8.0
+bcrypt==4.1.2

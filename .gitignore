@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 系统和日志
+.DS_Store
+Thumbs.db
+*.log
+run.log
+server.log
+logs/
+
+# 上传文件和临时文件
+uploads/
+temp/
+tmp/
+/models/
+
+# 敏感配置文件
+config.json
+*.env
+.env*
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 临时文件
+*.tmp
+*.bak
+*.orig
+
+# 测试和覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# 本地开发
+local_settings.py
+db.sqlite3
+
+# Docker
+docker-compose.override.yml
+
+# 前端
+admin_frontend/node_modules/
+admin_frontend/dist/
+
+# 临时目录
+temp/
+tmp/
+.cache/

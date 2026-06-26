@@ -1,0 +1,57 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv
+venv
+env
+*.egg-info
+dist
+build
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/
+
+# 上传文件
+uploads/
+
+# 临时文件
+temp/
+tmp/
+*.tmp
+*.bak
+
+# 测试文件
+.pytest_cache
+.coverage
+htmlcov
+
+# 文档（可选，如果不需要可以在镜像中包含）
+# docs/
+# *.md
+
+# 前端node_modules
+admin_frontend/node_modules
+admin_frontend/dist
+
+# Docker相关
+docker-compose.yml
+.dockerignore
+Dockerfile
