@@ -293,8 +293,11 @@ class CustomerServiceAgent:
                 conversation_history if self.config.enable_history else None
             )
 
-            # 调用agno Agent
-            response = await self._agent.arun(full_message)
+            # 调用agno Agent（arun返回async generator，需收集所有chunk）
+            full_reply = ""
+            async for chunk in self._agent.arun(full_message):
+                if chunk and hasattr(chunk, 'content') and chunk.content:
+                    full_reply += chunk.content
 
             # 计算耗时
             duration_ms = int((time.time() - start_time) * 1000)
@@ -304,14 +307,14 @@ class CustomerServiceAgent:
                 session_id=session_id,
                 user_id=user_id,
                 role="assistant",
-                content=response.content,
+                content=full_reply,
                 agent_used=self.config.name,
                 duration_ms=duration_ms
             )
 
             return ChatResult(
                 success=True,
-                reply=response.content,
+                reply=full_reply,
                 agent_used=self.config.name,
                 has_knowledge=bool(knowledge_context),
                 user_id=user_id,

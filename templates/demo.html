@@ -296,11 +296,13 @@
             messageInput.value = '';
             sendButton.disabled = true;
 
+            // 添加空的助手消息用于流式更新
+            const assistDiv = addMessage('', 'assistant');
             typingIndicator.classList.add('active');
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             try {
-                const response = await fetch(API_BASE_URL + '/api/agent/chat', {
+                const response = await fetch(API_BASE_URL + '/api/agent/chat/stream', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -309,20 +311,40 @@
                     })
                 });
 
-                const data = await response.json();
-                typingIndicator.classList.remove('active');
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let fullReply = '';
 
-                if (data.success) {
-                    addMessage(data.reply, 'assistant');
-                } else {
-                    addMessage('抱歉，处理请求时出现错误：' + (data.error || '未知错误'), 'assistant');
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                if (data.type === 'chunk' && data.content) {
+                                    fullReply += data.content;
+                                    assistDiv.querySelector('.message-content').innerHTML = formatMessage(fullReply);
+                                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                                } else if (data.type === 'error') {
+                                    assistDiv.querySelector('.message-content').innerHTML = '抱歉，处理请求时出现错误：' + data.error;
+                                }
+                            } catch (e) {}
+                        }
+                    }
                 }
             } catch (error) {
-                typingIndicator.classList.remove('active');
-                addMessage('网络连接出现问题，请稍后重试。', 'assistant');
+                assistDiv.querySelector('.message-content').innerHTML = '网络连接出现问题，请稍后重试。';
                 console.error('Error:', error);
             }
 
+            typingIndicator.classList.remove('active');
             sendButton.disabled = false;
             messageInput.focus();
         }
@@ -333,6 +355,7 @@
             messageDiv.innerHTML = `<div class="message-content">${formatMessage(content)}</div>`;
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
         }
 
         function formatMessage(content) {
